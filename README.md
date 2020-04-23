@@ -8,6 +8,20 @@ The atmega, in turn, will select the appropriate DMX universe, set the correct c
 The send() function will make sure the serial is correctly configured, will generate the header of the protocol, and start the sending process.
 This process is no more than a ISR that will load the serial buffer with the next channel value and stops once it reach the end.
 This ISR will be called by the machine when the data is being sent, so, this is a fast way to dump all the data.
-The main loop makes waits until the "send" process is finished and then process all the information in Serial memory. 
-It is worthed to note that, althoug there are many interruptions happening during the DMX part, the processor har a lot of idle time to do other stuff.
+The main loop checks the serial with the computeer and if the data was sent to the universes. 
+It is worthed to note that, althoug there are many interruptions happening during the DMX part, the processor have a lot of idle time to do other stuff, like controlling NEOPixel lights
+
+# What is next?
+ - 1-> make this code cleaner
+ - 2-> Add buttons, encoders and other stuf to control the dmx channels and universes.
+ - 3-> Maybe a SPI display to handle the feedback to the user. 
+ - 4-> Add the NeoPixel lib to handle RGB lights
+ - 5-> ???
+ 
+ # Why I stopped?
+ Well, I did this in two days and I am tired... so, next week I try something more.
+ 
+ # Was it tested?
+ No. No time, nor rs485 drivers. Maybe you can test it?
+ 
 
