@@ -12,7 +12,8 @@ The main loop checks the serial with the computeer and if the data was sent to t
 It is worthed to note that, althoug there are many interruptions happening during the DMX part, the processor have a lot of idle time to do other stuff, like controlling NEOPixel lights
 
 # What is next?
- - 1-> make this code cleaner
+ - 1-> make this code cleaner - almost done
+  - 1.1 -> missing time restrains for the application.  
  - 2-> Add buttons, encoders and other stuf to control the dmx channels and universes.
  - 3-> Maybe a SPI display to handle the feedback to the user. 
  - 4-> Add the NeoPixel lib to handle RGB lights
