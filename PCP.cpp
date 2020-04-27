@@ -11,9 +11,9 @@ PCP::PCP(DMXController *p, sequence *S) {
 	// TODO Auto-generated constructor stub
 	ptr_d = (char **)(p->get_ptr());
 	ptr_l = S->get_ptr();
-	Serial.begin(9600);
+	seq = S;
+	Serial.begin(250000);
 	Serial.setTimeout(20);
-	Serial.print("PCP iniciado");
 	Serial.flush();
 }
 
@@ -22,58 +22,133 @@ PCP::~PCP() {
 }
 
 void PCP::Handler(){
-	Serial.begin(9600);
-	memset(msg_raw,0,MAX_FILE_SIZE);
-	if(Serial.find('<'))
+	Serial.begin(250000);
+	Serial.println("GETdata");
+	Serial.flush();
+
+	int idx;
+	if(FindStartPtr())
 	{
-		int r = Serial.readBytesUntil('>',msg_raw,MAX_FILE_SIZE);
-		if(r>0){
-			char *ptr;
-			unsigned char idx = 0;
-			for(ptr=msg_raw; ptr<ptr+MAX_FILE_SIZE; ptr++)
+	idx = Serial.read();
+		if(idx>0){
+			if(idx<5)
+				last_msg = read_dmx(idx);
+			else
+				last_msg = read_LED();
+		}
+	}
+}
+
+bool PCP::is_channel()
+{
+	int r;
+	bool ret = false;
+	r = Serial.read();
+
+	if((char)r == ',')
+	{
+		r = Serial.read();
+		if((char)r == 'c')
+		{
+			r = Serial.read();
+			if((char)r == 'h')
 			{
-				if ((*ptr == 'i' && *(ptr+1)=='d' && *(ptr+2) == 'x'))
+				r = Serial.read();
+				if((char)r == ':')
 				{
-					idx = *(ptr+5);
+					ret = true;
 				}
-				if(idx<5)
-				{
-					if (*ptr == 'c' && *(ptr+1) =='h')
-					{
-						int j=0;
-						ptr = ptr+5;
+			}
+		}
+	}
+	return ret;
+}
 
-						while(j<MAX_DMX_CHANNELS)
-						{
-							ptr_d[idx][j] = *ptr;
-							Serial.println((int)ptr_d[idx][j],10);
-							Serial.flush();
-							ptr++;
-							j++;
-						}
-						break;
-					}
-				}
-				else
-				{
-					if (*ptr == 'c' && *(ptr+1) =='h')
-					{
-						int j=0;
-						ptr = ptr+5;
 
-						while(j<NUMPIXELS*3)
-						{
-							ptr_l[j] = *ptr;
-							Serial.println((int)ptr_l[j],10);
-							Serial.flush();
-							ptr++;
-							j++;
-						}
-						break;
+bool PCP::read_dmx(int idx)
+{
+	int j=0,r = 0;
+	if(is_channel())
+		while(j<MAX_DMX_CHANNELS)
+		{
+			r = Serial.read();
+			ptr_d[idx][j] = (char)r;
+			j++;
+		}
+	return FindTerminator();
+}
+
+bool PCP::read_LED()
+{
+	int j=0,r=0;
+	if(is_channel())
+		while(j<NUMPIXELS*3)
+		{
+			r = Serial.read();
+			ptr_l[j] = (char)r;
+			j++;
+		}
+	r = Serial.read();
+	if((char)r == 'f')
+	{
+		r = Serial.read();//"}]>",msg_ptr,MAX_FILE_SIZE);
+		if((char)r == 'x')
+		{
+			r = Serial.read();//"}]>",msg_ptr,MAX_FILE_SIZE);
+			if((char)r == ':')
+			{
+				unsigned char efct = Serial.read();
+				unsigned char f_in = Serial.read();
+				unsigned char f_out = Serial.read();
+				seq->set_effect((effect_type)efct,f_in,f_out);
+			}
+		}
+	}
+	return FindTerminator();
+}
+bool PCP::FindStartPtr()
+{
+	bool ret = false;
+	int r=0;
+	if(Serial.find((char *)"<un:[{"))
+	{
+		r = Serial.read();
+		if((char)r == 'i')
+		{
+			r = Serial.read();
+			if((char)r == 'd')
+			{
+				r = Serial.read();
+				if((char)r == 'x')
+				{
+					r = Serial.read();
+					if((char)r == ':')
+					{
+					ret = true;
 					}
 				}
 			}
 		}
 	}
+	return ret;
+}
+bool PCP::FindTerminator()
+{
+	bool ret = false;
+	int r = 0;
+	r = Serial.read();//"}]>",msg_ptr,MAX_FILE_SIZE);
+	if((char)r == '}')
+	{
+		r = Serial.read();//"}]>",msg_ptr,MAX_FILE_SIZE);
+		if((char)r == ']')
+		{
+			r = Serial.read();//"}]>",msg_ptr,MAX_FILE_SIZE);
+			if((char)r == '>')
+			{
+				ret = true;
+			}
+		}
+	}
+	return ret;
 }
 

@@ -12,7 +12,7 @@ PCP protocol(&dmx,&S);
 // the setup function runs once when you press reset or power the board
 void setup() {
 
-	S.setFrameDisplayed(0);
+
 }
 
 // the loop function runs over and over again forever
@@ -35,7 +35,7 @@ void loop() {
 			break;
 		}
 protocol.restart_serial();
-delay(20);
+delay(35);
 }
 
 

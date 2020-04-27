@@ -15,19 +15,24 @@ sequence::~sequence()
 
 sequence::sequence()
 {
-	setFrameDisplayed(0);
+
 	pixels = new Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_RGB);
 	pixels->begin();
 }
 
-void sequence::setFrameDisplayed(int j)
+
+void sequence::set_effect(effect_type _fx, unsigned char fade_in, unsigned char fade_out)
 {
-	seq_number = j;
+fx = _fx;
+fx_fade_in = fade_in;
+fx_fade_out = fade_out;
+
+
 }
-#define FREQ_TOTAL 20
+
 void sequence::handler()
 {
-	static unsigned int count = 0;
+
 	int pos = 0;
 	for(int i =0 ; i< NUMPIXELS;i++)
 	{
@@ -35,9 +40,8 @@ void sequence::handler()
 	  pos+=3;
 	}
 	pixels->show();   // Send the updated pixel colors to the hardware.
-	count++;
-	if (count>FREQ_TOTAL)
-		count = 0;
+
+
 }
 
 

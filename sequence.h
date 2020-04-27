@@ -11,8 +11,8 @@
 
 #include <Adafruit_NeoPixel.h>
 #include "config.h"
-#include "bin.h"
 
+#include "types.h"
 #include "Arduino.h"
 
 class sequence
@@ -20,11 +20,15 @@ class sequence
 private:
 	unsigned char p[NUMPIXELS*3];
 
+	effect_type fx;
+	unsigned char fx_fade_in;
+	unsigned char fx_fade_out;
 	int seq_number; // number of the sequence being displayed
 	Adafruit_NeoPixel *pixels; //pixels being displayed in the hardware;
 
 public:
-	void setFrameDisplayed(int i);
+	void set_effect(effect_type _fx, unsigned char fade_in, unsigned char fade_out);
+
 	unsigned char *get_ptr(){return p;};
 	void handler(); //must be called every 16milliseconds;
 	sequence();

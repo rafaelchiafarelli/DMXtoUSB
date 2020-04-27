@@ -9,6 +9,7 @@
 #define DMXCONTROLLER_H_
 
 #include "types.h"
+#include "config.h"
 
 class DMXController {
 private:

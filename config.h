@@ -13,7 +13,10 @@
 #define GROUPS 10
 #define PIN 13
 #define TIME_CONSTANT FPS
-
+#define MAX_DMX_CHANNELS 512
+#define MAX_DMX_UNIVERSES 3
+#define MAX_FILE_SIZE 920
+#define DMXSPEED 250000L
 
 
 #endif /* CONFIG_H_ */

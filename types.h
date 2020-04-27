@@ -7,11 +7,19 @@
 
 #ifndef TYPES_H_
 #define TYPES_H_
-//global global macros
-#define MAX_DMX_CHANNELS 512
-#define MAX_DMX_UNIVERSES 3
-#define MAX_FILE_SIZE 1200
-#define DMXSPEED 250000L
+typedef enum{
+	FADE_IN_FADE_OUT,
+	FADE_IN_DEAD_OUT,
+	FADE_IN_LIVE_OUT,
+	FADE_IN_LIVE_OUT_FADE_OUT,
+
+	STROBE_LIVE_FADE_IN_DEAD_FADE_OUT,
+	STROBE_FREQ_FADE_IN_DEAD_FADE_OUT,
+	STROVE_FREQ_INCREASE_FADE_IN
+
+
+
+}effect_type;
 
 typedef enum{
 	DMX_TIME = 0,
