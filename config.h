@@ -9,8 +9,7 @@
 #define CONFIG_H_
 #define NUMPIXELS 300
 #define UINT8_T_MAX 254
-#define FPS 60
-#define GROUPS 10
+#define FPS 10
 #define PIN 13
 #define TIME_CONSTANT FPS
 #define MAX_DMX_CHANNELS 512

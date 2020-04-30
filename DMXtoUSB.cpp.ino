@@ -27,6 +27,7 @@ switch(st){
 	case DMX_TIME:
 		st = SERIAL_TIME;
 		dmx.Handler();
+		S.handler_visual();
 		break;
 	case SERIAL_TIME:
 		st = NEOPIXEL_TIME;
@@ -37,7 +38,6 @@ switch(st){
 		S.handler();
 		break;
 	}
-protocol.restart_serial();
 GeneralManager.end();
 }
 
